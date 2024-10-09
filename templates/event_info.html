@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+    .card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .event-image {
+        width: 100%;    
+        height: auto;          
+        object-fit: contain;   
+    }
+    .event-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .register-btn {
+      background-color: #28a745;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      margin: 5px 0;
+      font-size: 16px;
+      text-align: center;
+      display: inline-block;
+    }
+    .register-btn:hover {
+      background-color: #218838;
+    }
+</style>
+
+<div class="event-container">
+     <div class="text-center">
+        <a href="/events/{{ event.id }}/register/{{event.form_id}}" class="register-btn">Register Now</a>
+     </div>
+    
+    {% if event.poster %}
+    <div class="card">
+        <img src="{{ event.poster.url }}" alt="{{ event.title }}" class="event-image">
+    </div>
+    {% endif %}
+
+    <div class="event-details">
+        <div>{{ event.more_info|safe }}</div>
+    </div>
+
+    <div class="text-center">
+        <a href="/events/{{ event.id }}/register/{{event.form_id}}" class="register-btn">Register Now</a>
+    </div>
+</div>
+
+{% endblock content %}

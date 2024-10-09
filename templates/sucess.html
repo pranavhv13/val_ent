@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h3 class="text-center">Registration Successful!</h3>
+    <p class="text-center">Thank you for registering. We look forward to seeing you at the event!</p>
+    <div class="text-center mt-4">
+      <img src="{% url 'download_ticket' ticket_id %}" alt="Your Ticket" style="max-width: 300px;"/>
+    </div>
+    <div class="text-center mt-4">
+        <a href="/ticket/download/{{ticket_id}}" class="btn btn-primary">Download Ticket</a>
+    </div>
+    <div class="text-center mt-4">
+      {% for key, value in submitted_data.items %}
+        <li>{{ key }}: {{ value }}</li>
+      {% endfor %}
+    </div>
+</div>
+{% endblock content %}

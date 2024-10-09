@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h3 class="text-center mt-4 mb-4">This is the Events page</h3>
+
+  <div class="text-center mb-4">
+    <button id="upcoming-btn" class="btn btn-outline-primary mx-2">Upcoming</button>
+    <button id="completed-btn" class="btn btn-outline-secondary mx-2">Completed</button>
+  </div>
+
+  <div id="events-container" class="container mt-4">
+    <!-- Event cards will be injected here -->
+  </div>
+
+  <style>
+    .card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+    .event-image {
+      height: 200px;
+      object-fit: cover;
+    }
+  </style>
+
+  <script>
+    const upcomingEvents = [
+    {% for event in upcoming_events %}
+    {
+      id : "{{ event.id }}",
+      title: "{{ event.title }}",
+      description: "{{ event.description }}",
+      location: "{{ event.location }}",
+      date: "{{ event.date|date:'m-d-Y' }}",
+      banner: "{% if event.banner %}{{ event.banner.url }}{% else %}https://via.placeholder.com/150{% endif %}"
+    },
+    {% endfor %}
+    ];
+
+    const completedEvents = [
+    {% for event in completed_events %}
+    {
+      title: "{{ event.title }}",
+      description: "{{ event.description }}",
+      location: "{{ event.location }}",
+      date: "{{ event.date|date:'m-d-Y' }}",
+      banner: "{% if event.banner %}{{ event.banner.url }}{% else %}https://via.placeholder.com/150{% endif %}",
+      isDone: {% if event.isDone %}false{% else %}true{% endif %}
+    },
+    {% endfor %}
+    ];
+
+    function displayUpcomingEvents() {
+      let eventHtml = '';
+
+      if (upcomingEvents.length === 0) {
+        eventHtml = `
+          <div class="alert alert-info text-center" role="alert">
+            No upcoming events right now. Stay tuned!
+          </div>
+        `;
+      } else {
+        eventHtml += '<div class="row row-cols-1 row-cols-md-3 g-4">';
+        upcomingEvents.forEach(event => {
+          eventHtml += `
+            <div class="col">
+              <div class="card h-100">
+                <img src="${event.banner}" class="card-img-top event-image" alt="${event.title}">
+                <div class="card-body">
+                  <h5 class="card-title">${event.title}</h5>
+                  <p class="card-text">${event.description}</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item">Location: ${event.location}</li>
+                  <li class="list-group-item">Date: ${event.date}</li>
+                </ul>
+                <div class="card-body">
+                  <div class="d-flex justify-content-center">
+                        <a href="/events/${event.id}" class="btn btn-primary" role="button">More Info</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+        eventHtml += '</div>';
+      }
+
+      document.getElementById('events-container').innerHTML = eventHtml;
+    }
+
+    function displayCompletedEvents() {
+      let eventHtml = '';
+
+      if (completedEvents.length === 0) {
+        eventHtml = `
+          <div class="alert alert-info text-center" role="alert">
+            No completed events at the moment.
+          </div>
+        `;
+      } else {
+        eventHtml += '<div class="row row-cols-1 row-cols-md-3 g-4">';
+        completedEvents.forEach(event => {
+          eventHtml += `
+            <div class="col">
+              <div class="card h-100">
+                <img src="${event.banner}" class="card-img-top event-image" alt="${event.title}">
+                <div class="card-body">
+                  <h5 class="card-title">${event.title}</h5>
+                  <p class="card-text">${event.description}</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item">Location: ${event.location}</li>
+                  <li class="list-group-item">Date: ${event.date}</li>
+                </ul>
+                <div class="card-body">
+                    <div class="d-flex justify-content-center">
+                        <a href="#" class="btn btn-primary disabled" role="button" aria-disabled='true'>More Info</a>
+                    </div>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+        eventHtml += '</div>';
+      }
+
+      document.getElementById('events-container').innerHTML = eventHtml;
+    }
+
+    // Show upcoming events by default when the page loads
+    window.onload = function() {
+      displayUpcomingEvents();
+    };
+
+    document.getElementById('upcoming-btn').addEventListener('click', displayUpcomingEvents);
+    document.getElementById('completed-btn').addEventListener('click', displayCompletedEvents);
+  </script>
+{% endblock content %}
